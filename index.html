@@ -366,7 +366,7 @@
   langButtons.forEach(function(b){ b.addEventListener('click', function(){ apply(b.dataset.lang); }); });
   var saved=null; try{ saved = localStorage.getItem('labs-lang'); }catch(e){}
   var sys=(navigator.language||'ko').slice(0,2).toLowerCase();
-  apply(saved || (sys==='en'||sys==='ja' ? sys : 'ko'));
+  apply(saved || (sys==='ko'||sys==='ja' ? sys : 'en')); // 기기 언어: 한국어→ko, 일본어→ja, 그 외 전부 영어
   if (!review.length) document.getElementById('sec-review').hidden = true;
 
   document.getElementById('nLive').textContent = live.length;
