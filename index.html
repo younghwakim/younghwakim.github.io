@@ -267,7 +267,7 @@
 
   // ── 앱 목록. 새 앱이 나오면 여기에 한 항목. 문구는 {ko,en,ja}. status: live | review ──
   var APPS = [
-    { id:'buruda', status:'live', name:{ko:'부루다',en:'Buruda',ja:'Buruda（プルダ）'}, en:'Buruda', word:'부루다',
+    { id:'buruda', status:'live', name:{ko:'부루다',en:'Buruda',ja:'Buruda（プルダ）'}, en:'Buruda', word:{ko:'부루다',en:'buruda',ja:'buruda'},
       pos:{ko:'차 빼달라는 말, 번호 노출 없이.', en:'"Could you move your car?" — without a phone number.', ja:'「車を動かして」を、電話番号なしで。'},
       desc:{ko:'앞차 때문에 못 나갈 때 번호판만 알면 차주에게 알림이 갑니다. 서로 전화번호를 주고받지 않고, QR 카드를 붙여 두면 앱 없는 사람도 보낼 수 있습니다.',
             en:'Boxed in by a parked car? Type the plate and the owner gets a notification. No phone numbers change hands, and a QR card on the dashboard lets people without the app reach you too.',
@@ -281,7 +281,7 @@
             ja:'前後のカメラが同じ瞬間に撮れて1枚になります。構図・色味・飾り・保存先をシャッターの前に決めておけば、見えたまま保存される「撮る前に決めるカメラ」。'},
       accent:'#A3C29B', released:'2026.08', sort:'2026-08-04', platforms:['ios'],
       links:[{k:'intro', u:'https://younghwakim.github.io/shared/wemera/', main:true},{t:'App Store', u:'https://apps.apple.com/kr/app/id6793656140'}] },
-    { id:'tobeokmap', status:'live', name:{ko:'뚜벅맵',en:'Tobeokmap',ja:'トボクマップ'}, en:'Tobeokmap', word:'뚜벅',
+    { id:'tobeokmap', status:'live', name:{ko:'뚜벅맵',en:'Tobeokmap',ja:'トボクマップ'}, en:'Tobeokmap', word:{ko:'뚜벅',en:'tobeok',ja:'トボク'},
       pos:{ko:'환승 없이 갈 수 있는, 아직 안 가본 곳.', en:"One train, no transfer, somewhere you haven't been.", ja:'乗り換えなしで行ける、まだ知らない場所。'},
       desc:{ko:'출발지만 정하면 지하철 한 번으로 닿는 동네와 카페·밥집·명소가 지도에 한 번에. 늘 가던 동네는 빼고 볼 수 있고, 로그인 없이 바로 씁니다.',
             en:'Pick a start and see every neighborhood one subway ride away, with its cafes, restaurants and sights. Skip the places you always go. Seoul metro area, no login.',
@@ -296,7 +296,7 @@
       accent:'#2BB5A0', released:'2026.09', sort:'2026-09-08', platforms:['ios','koOnly'],
       links:[{k:'intro', u:'https://younghwakim.github.io/shared/timeteller/', main:true},{t:'App Store', u:'https://apps.apple.com/kr/app/id6809161436'}] },
 
-    { id:'morado-ildeung', status:'review', name:{ko:'모라도 일등',en:'1st at Something',ja:'なんかで1位'}, en:'1st at Something', word:'1등',
+    { id:'morado-ildeung', status:'review', name:{ko:'모라도 일등',en:'1st at Something',ja:'なんかで1位'}, en:'1st at Something', word:{ko:'1등',en:'1st',ja:'1位'},
       pos:{ko:'뭐라도 하나는 1등이다.', en:'Everyone is first at something.', ja:'何かひとつは1位。'},
       desc:{ko:'폰으로 잴 수 있는 건 뭐든 종목입니다. 모든 종목은 양쪽 끝에 1등이 있어서, 극단이면 누구나 어딘가 1등. 결과는 기록증 카드로 나옵니다.',
             en:'Anything a phone can measure is an event. Every event has a winner at both ends, so be extreme and you\'re first somewhere. Results come as a record card.',
@@ -343,7 +343,7 @@
         '<div class="meta">'+pills+'</div>'+
         '<div class="links">'+links+'</div>'+
       '</div>'+
-      '<div class="stage" data-word="'+esc(a.word||'')+'"><div class="phone"><img src="assets/shots/'+esc(a.id)+'.webp" width="560" height="1217" alt="'+esc(name)+'" loading="lazy"></div></div>'+
+      '<div class="stage" data-word="'+esc(a.word?L(a.word):'')+'"><div class="phone"><img src="assets/shots/'+esc(a.id)+'.webp" width="560" height="1217" alt="'+esc(name)+'" loading="lazy"></div></div>'+
     '</article>';
   }
 
