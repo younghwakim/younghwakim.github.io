@@ -265,7 +265,8 @@
       svg:'<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>' }
   ];
 
-  // ── 앱 목록. 새 앱이 나오면 여기에 한 항목. 문구는 {ko,en,ja}. status: live | review ──
+  // ── 앱 목록. 새 앱이 나오면 여기에 한 항목. 문구는 {ko,en,ja}. status: live | review
+  //    shot: 언어별 화면이 있으면 {ko,en,ja}(assets/shots/<이름>.webp), 없으면 생략(assets/shots/<id>.webp 한 장) ──
   var APPS = [
     { id:'buruda', status:'live', name:{ko:'부루다',en:'Buruda',ja:'Buruda（プルダ）'}, en:'Buruda', word:{ko:'부루다',en:'buruda',ja:'buruda'},
       pos:{ko:'차 빼달라는 말, 번호 노출 없이.', en:'"Could you move your car?" — without a phone number.', ja:'「車を動かして」を、電話番号なしで。'},
@@ -296,14 +297,14 @@
       accent:'#2BB5A0', released:'2026.09', sort:'2026-09-08', platforms:['ios','koOnly'],
       links:[{k:'intro', u:'https://younghwakim.github.io/shared/timeteller/', main:true},{t:'App Store', u:'https://apps.apple.com/kr/app/id6809161436'}] },
 
-    { id:'morado-ildeung', status:'review', name:{ko:'모라도 일등',en:'1st at Something',ja:'なんかで1位'}, en:'1st at Something', word:{ko:'1등',en:'1st',ja:'1位'},
+    { id:'morado-ildeung', status:'review', shot:{ko:'morado-ildeung-ko',en:'morado-ildeung-en',ja:'morado-ildeung-ja'}, name:{ko:'모라도 일등',en:'1st at Something',ja:'なんかで1位'}, en:'1st at Something', word:{ko:'1등',en:'1st',ja:'1位'},
       pos:{ko:'뭐라도 하나는 1등이다.', en:'Everyone is first at something.', ja:'何かひとつは1位。'},
       desc:{ko:'폰으로 잴 수 있는 건 뭐든 종목입니다. 모든 종목은 양쪽 끝에 1등이 있어서, 극단이면 누구나 어딘가 1등. 결과는 기록증 카드로 나옵니다.',
             en:'Anything a phone can measure is an event. Every event has a winner at both ends, so be extreme and you\'re first somewhere. Results come as a record card.',
             ja:'スマホで測れるものは何でも種目。どの種目にも両端に1位があるので、極端ならどこかで1位。結果は記録証カードになります。'},
       accent:'#9CBA12', platforms:['ios'],
       links:[{k:'intro', u:'https://younghwakim.github.io/shared/morado-ildeung/', main:true}] },
-    { id:'todaycolor', status:'live', name:{ko:'투데이컬러',en:'Todaycolor',ja:'Todaycolor'}, en:'Todaycolor', word:{ko:'오늘의 색',en:'today',ja:'今日の色'},
+    { id:'todaycolor', status:'live', shot:{ko:'todaycolor-ko',en:'todaycolor-en',ja:'todaycolor-ja'}, name:{ko:'투데이컬러',en:'Todaycolor',ja:'Todaycolor'}, en:'Todaycolor', word:{ko:'오늘의 색',en:'today',ja:'今日の色'},
       pos:{ko:'오늘의 색으로 그리는 하루 한 장.', en:"Today's colors. One drawing a day.", ja:'今日の色で描く、一日一枚。'},
       desc:{ko:'매일 전 세계가 같은 네 가지 색을 받습니다. 하나를 종이로 깔고 셋으로 오늘을 그리면, 달력에 한 장씩 쌓입니다.',
             en:'Every day the whole world gets the same four colors. One is your paper, three are your brushes, and each drawing lands on the calendar.',
@@ -343,7 +344,7 @@
         '<div class="meta">'+pills+'</div>'+
         '<div class="links">'+links+'</div>'+
       '</div>'+
-      '<div class="stage" data-word="'+esc(a.word?L(a.word):'')+'"><div class="phone"><img src="assets/shots/'+esc(a.id)+'.webp" width="560" height="1217" alt="'+esc(name)+'" loading="lazy"></div></div>'+
+      '<div class="stage" data-word="'+esc(a.word?L(a.word):'')+'"><div class="phone"><img src="assets/shots/'+esc(a.shot?L(a.shot):a.id)+'.webp" width="560" height="1217" alt="'+esc(name)+'" loading="lazy"></div></div>'+
     '</article>';
   }
 
