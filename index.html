@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>mubi labs</title>
-<meta name="description" content="앱 100개를 만드는 중입니다. 혼자 만들고 직접 운영하는 앱들 — 부루다·wemera·뚜벅맵·타임모의신, 그리고 심사 중인 앱까지 한 곳에서.">
+<meta name="description" content="앱 100개를 만드는 중입니다. 혼자 만들고 직접 운영하는 앱들 — Nom·투데이컬러·모라도 일등·타임모의신·뚜벅맵·wemera·부루다를 한 곳에서.">
 <meta name="theme-color" content="#F6F7F9" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0D0F12" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23111318'/%3E%3Cpath d='M14 44V24c0-4 3-7 7-7s7 3 7 7v20M28 24c0-4 3-7 7-7s7 3 7 7v20' fill='none' stroke='%23F6F7F9' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
@@ -50,8 +50,9 @@
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
   body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--font); font-size:16px; line-height:1.65; letter-spacing:-.01em; word-break:keep-all; overflow-wrap:break-word; overflow-x:hidden}
-  html[lang="ja"] body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif}
+  html[lang="ja"] body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif; word-break:normal; line-break:strict}
   html[lang="en"] body{word-break:normal}
+  html[lang="zh-Hant"] body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif; word-break:normal}
   img{max-width:100%; display:block}
   a{color:inherit}
   h1,h2,h3{margin:0; text-wrap:balance}
@@ -146,6 +147,14 @@
   .phone{position:relative; width:min(230px, 62vw); aspect-ratio:1206/2622; max-height:420px; border-radius:38px 38px 0 0; background:#0E1117; padding:8px 8px 0; box-shadow:0 30px 60px -20px rgba(0,0,0,.45), inset 0 0 0 1.5px #3A4150; overflow:hidden; transform:translateY(24px); transition:transform .3s cubic-bezier(.2,.7,.2,1)}
   .app:hover .phone{transform:translateY(12px)}
   .phone img{width:100%; height:100%; object-fit:cover; object-position:top; border-radius:30px 30px 0 0; background:#fff}
+  /* 영상이 있는 앱 — 폰 뒤로 세로 영상 한 장이 비스듬히 겹친다(화면에 들어올 때만 재생) */
+  .app .stage.has-reel{min-height:380px; padding-left:12px; padding-right:12px}
+  .reel{position:relative; flex:none; width:min(178px, 42vw); aspect-ratio:400/712; align-self:center; margin-right:-30px; border-radius:24px; overflow:hidden; background:#FFF8E7; border:1.5px solid color-mix(in srgb, var(--accent) 45%, #1C1C1C); box-shadow:0 26px 50px -22px rgba(0,0,0,.5); transform:translateY(6px) rotate(-5deg); transition:transform .3s cubic-bezier(.2,.7,.2,1); z-index:1}
+  .reel video,.reel img{width:100%; height:100%; object-fit:cover; display:block}
+  .app:hover .reel{transform:translateY(0) rotate(-7deg)}
+  .has-reel .phone{width:min(204px, 48vw); flex:none; z-index:2}
+  @media(min-width:820px){ .reel{width:190px; margin-right:-34px} .has-reel .phone{width:216px} }
+  .app{scroll-margin-top:84px}
   .app.review .stage{min-height:240px}
   .app.review .phone{max-height:320px}
 
@@ -159,7 +168,7 @@
   .foot nav svg{width:16px; height:16px; color:var(--ink-3)}
   .copy-line{margin-top:28px; font-size:.84rem}
   [hidden]{display:none !important}
-  @media(prefers-reduced-motion:reduce){.app,.phone{transition:none} html{scroll-behavior:auto}}
+  @media(prefers-reduced-motion:reduce){.app,.phone,.reel{transition:none} html{scroll-behavior:auto}}
 
   /* 모바일: 단어 중간에서 꺾이지 않게 — 헤더·버튼·칩은 한 줄 고정 */
   .brand,.wordmark,.langs,.langs button,.btn,.chip,.pill,.lnk,.social a,.eyebrow{white-space:nowrap}
@@ -184,6 +193,7 @@
         <button data-lang="ko">한국어</button>
         <button data-lang="en">EN</button>
         <button data-lang="ja">日本語</button>
+        <button data-lang="zh">繁中</button>
       </div>
       <div class="social" id="socialTop"></div>
     </div>
@@ -240,90 +250,107 @@
   var UI = {
     ko: { htmlLang:'ko', title:'mubi labs', h1:'앱 100개를<br>만드는 중입니다.',
       lede:'나부터 쓰고 싶은 앱을 만들고 있습니다.',
-      legLive:'출시', legReview:'심사 중', tallyNote:'출시된 앱은 채운 칸, 심사 중인 앱은 빗금. 시작은 2026년 7월.',
+      legLive:'출시', legReview:'심사 중', tallyNote:'출시된 앱은 채운 칸, 심사 중인 앱은 빗금. 시작은 2026년 7월.', watch:'영상',
       liveH:'출시된 앱', liveS:'스토어에서 지금 받을 수 있습니다 · 최근 출시 순', reviewH:'심사 중', reviewS:'제출됐고, 통과되면 위로 올라갑니다',
       pillLive:'출시됨', pillReview:'App Store 심사 중', idxReview:'심사 중', lnkIntro:'소개 페이지', lnkIntroKo:'소개 페이지', lnkPrivacy:'개인정보처리방침', mail:'메일', iosPending:'iOS 심사 중', android:'Android', ios:'iOS', koOnly:'' },
     en: { htmlLang:'en', title:'mubi labs', h1:'Building<br>100 apps.',
       lede:'Apps I want to use myself.',
-      legLive:'Live', legReview:'In review', tallyNote:'Filled cells are live apps, hatched cells are in review. Started July 2026.',
+      legLive:'Live', legReview:'In review', tallyNote:'Filled cells are live apps, hatched cells are in review. Started July 2026.', watch:'Video',
       liveH:'Live apps', liveS:'On the stores now · newest first', reviewH:'In review', reviewS:'Submitted — they move up when approved',
       pillLive:'Live', pillReview:'In App Store review', idxReview:'In review', lnkIntro:'About the app', lnkIntroKo:'About the app (Korean)', lnkPrivacy:'Privacy Policy', mail:'Email', iosPending:'iOS in review', android:'Android', ios:'iOS', koOnly:'Korean only · Korea' },
     ja: { htmlLang:'ja', title:'mubi labs', h1:'アプリを100個、<br>作っています。',
       lede:'まず自分が使いたいアプリを作っています。',
-      legLive:'リリース', legReview:'審査中', tallyNote:'塗りつぶしがリリース済み、斜線が審査中。始まりは2026年7月。',
+      legLive:'リリース', legReview:'審査中', tallyNote:'塗りつぶしがリリース済み、斜線が審査中。始まりは2026年7月。', watch:'動画',
       liveH:'リリース済み', liveS:'ストアで今すぐ・新しい順', reviewH:'審査中', reviewS:'提出済み。通れば上に上がります',
-      pillLive:'リリース済み', pillReview:'App Store審査中', idxReview:'審査中', lnkIntro:'紹介ページ', lnkIntroKo:'紹介ページ（韓国語）', lnkPrivacy:'プライバシーポリシー', mail:'メール', iosPending:'iOS審査中', android:'Android', ios:'iOS', koOnly:'韓国語のみ・韓国向け' }
+      pillLive:'リリース済み', pillReview:'App Store審査中', idxReview:'審査中', lnkIntro:'紹介ページ', lnkIntroKo:'紹介ページ（韓国語）', lnkPrivacy:'プライバシーポリシー', mail:'メール', iosPending:'iOS審査中', android:'Android', ios:'iOS', koOnly:'韓国語のみ・韓国向け' },
+    zh: { htmlLang:'zh-Hant', title:'mubi labs', h1:'正在做<br>100 個 App。',
+      lede:'先做我自己想用的 App。',
+      legLive:'已上架', legReview:'審核中', tallyNote:'填滿的格子是已上架，斜線是審核中。從 2026 年 7 月開始。', watch:'影片',
+      liveH:'已上架的 App', liveS:'現在就能在商店下載・由新到舊', reviewH:'審核中', reviewS:'已送出，通過後會移到上面',
+      pillLive:'已上架', pillReview:'App Store 審核中', idxReview:'審核中', lnkIntro:'介紹頁面', lnkIntroKo:'介紹頁面（韓文）', lnkPrivacy:'隱私權政策', mail:'信箱', iosPending:'iOS 審核中', android:'Android', ios:'iOS', koOnly:'僅限韓國・韓文' }
   };
 
   // ── 연락처·SNS ──
   var SOCIAL = [
-    { id:'threads', label:'Threads', handle:'@mubi.labs', url:'https://www.threads.com/@mubi.labs',
+    { id:'threads', label:'Threads', handle:'@mubi.labs', url:'https://www.threads.com/@mubi.labs', zh:{ handle:'@mubi.labs_', url:'https://www.threads.com/@mubi.labs_' },
       svg:'<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12.6 11.2c1.9 0 3.3.6 4.1 1.6.6-.3 1.3-.5 2-.5C18.4 8 15.6 5 12 5 8 5 5 8 5 12s3 7 7 7c2.7 0 4.6-1.3 5.6-3.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M15.6 13.3c0 1.7-1.3 3-3.2 3-1.5 0-2.6-.8-2.6-1.9 0-1.2 1.2-2 3-2 .9 0 1.8.2 2.6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9.3 9.6c.6-.9 1.6-1.4 2.8-1.4 1.7 0 2.9 1 3.1 2.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>' },
-    { id:'instagram', label:'Instagram', handle:'@mubi.labs', url:'https://www.instagram.com/mubi.labs',
+    { id:'instagram', label:'Instagram', handle:'@mubi.labs', url:'https://www.instagram.com/mubi.labs', zh:{ handle:'@mubi.labs_', url:'https://www.instagram.com/mubi.labs_' },
       svg:'<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3.8" stroke="currentColor" stroke-width="1.8"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg>' },
     { id:'mail', label:'mail', handle:'younghwa.labs@gmail.com', url:'mailto:younghwa.labs@gmail.com',
       svg:'<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>' }
   ];
 
   // ── 앱 목록. 새 앱이 나오면 여기에 한 항목. 문구는 {ko,en,ja}. status: live | review
-  //    shot: 언어별 화면이 있으면 {ko,en,ja}(assets/shots/<이름>.webp), 없으면 생략(assets/shots/<id>.webp 한 장) ──
+  //    문구에 zh(번체)가 없으면 영어로 떨어진다. shot: 언어별 화면이 있으면 {ko,en,ja,zh}(assets/shots/<이름>.webp), 없으면 생략(assets/shots/<id>.webp 한 장)
+  //    reel: 세로 영상이 있으면 {ko,en,ja,zh}(assets/video/<이름>.mp4 + 같은 이름 .webp 포스터) — 폰 뒤에 겹쳐 보인다 ──
   var APPS = [
     { id:'buruda', status:'live', name:{ko:'부루다',en:'Buruda',ja:'Buruda（プルダ）'}, en:'Buruda', word:{ko:'부루다',en:'buruda',ja:'buruda'},
-      pos:{ko:'차 빼달라는 말, 번호 노출 없이.', en:'"Could you move your car?" — without a phone number.', ja:'「車を動かして」を、電話番号なしで。'},
+      pos:{ko:'차 빼달라는 말, 번호 노출 없이.', en:'"Could you move your car?" — without a phone number.', ja:'「車を動かして」を、電話番号なしで。', zh:'「請移一下車」，不用留電話。'},
       desc:{ko:'앞차 때문에 못 나갈 때 번호판만 알면 차주에게 알림이 갑니다. 서로 전화번호를 주고받지 않고, QR 카드를 붙여 두면 앱 없는 사람도 보낼 수 있습니다.',
             en:'Boxed in by a parked car? Type the plate and the owner gets a notification. No phone numbers change hands, and a QR card on the dashboard lets people without the app reach you too.',
-            ja:'前の車で出られないとき、ナンバーだけで持ち主に通知が届きます。電話番号は互いに知らせず、QRカードを置いておけばアプリのない人からも届きます。'},
+            ja:'前の車で出られないとき、ナンバーだけで持ち主に通知が届きます。電話番号は互いに知らせず、QRカードを置いておけばアプリのない人からも届きます。', zh:'被前面的車擋住時，只要知道車牌就能通知車主。雙方不用交換電話號碼，放一張 QR 卡，沒有 App 的人也能傳訊息給你。'},
       accent:'#3182F6', released:'2026.07', sort:'2026-07-12', platforms:['android','ios','koOnly'],
       links:[{k:'intro', u:'https://younghwakim.github.io/shared/buruda/', main:true},{t:'App Store', u:'https://apps.apple.com/kr/app/id6809695439'},{t:'Google Play', u:'https://play.google.com/store/apps/details?id=com.buruda.app'}] },
     { id:'wemera', status:'live', name:{ko:'wemera',en:'wemera',ja:'wemera'}, en:'Both cameras, one shot', word:'wemera',
-      pos:{ko:'찍어주는 사람도, 같이 나와요.', en:"Everyone's in the shot.", ja:'撮る人も、一緒に写る。'},
+      pos:{ko:'찍어주는 사람도, 같이 나와요.', en:"Everyone's in the shot.", ja:'撮る人も、一緒に写る。', zh:'幫大家拍照的人，也一起入鏡。'},
       desc:{ko:'앞뒤 카메라가 같은 순간에 찍혀 한 장이 됩니다. 구도·색감·꾸밈·저장 폴더를 셔터 전에 정해두면 화면에 보이던 그대로 저장되는, 찍기 전에 정해두는 카메라.',
             en:'Both cameras fire at the same moment and land in one photo. Set the layout, look, decoration and folder before the shutter, and it saves exactly what you saw.',
-            ja:'前後のカメラが同じ瞬間に撮れて1枚になります。構図・色味・飾り・保存先をシャッターの前に決めておけば、見えたまま保存される「撮る前に決めるカメラ」。'},
+            ja:'前後のカメラが同じ瞬間に撮れて1枚になります。構図・色味・飾り・保存先をシャッターの前に決めておけば、見えたまま保存される「撮る前に決めるカメラ」。', zh:'前後鏡頭在同一瞬間拍下，變成一張照片。構圖、色調、裝飾、儲存位置都在按快門前決定好，畫面上看到什麼就存什麼。'},
       accent:'#A3C29B', released:'2026.08', sort:'2026-08-04', platforms:['ios'],
       links:[{k:'intro', u:'https://younghwakim.github.io/shared/wemera/', main:true},{t:'App Store', u:'https://apps.apple.com/kr/app/id6793656140'}] },
     { id:'tobeokmap', status:'live', name:{ko:'뚜벅맵',en:'Tobeokmap',ja:'トボクマップ'}, en:'Tobeokmap', word:{ko:'뚜벅',en:'tobeok',ja:'トボク'},
-      pos:{ko:'환승 없이 갈 수 있는, 아직 안 가본 곳.', en:"One train, no transfer, somewhere you haven't been.", ja:'乗り換えなしで行ける、まだ知らない場所。'},
+      pos:{ko:'환승 없이 갈 수 있는, 아직 안 가본 곳.', en:"One train, no transfer, somewhere you haven't been.", ja:'乗り換えなしで行ける、まだ知らない場所。', zh:'不用轉車就能到的、還沒去過的地方。'},
       desc:{ko:'출발지만 정하면 지하철 한 번으로 닿는 동네와 카페·밥집·명소가 지도에 한 번에. 늘 가던 동네는 빼고 볼 수 있고, 로그인 없이 바로 씁니다.',
             en:'Pick a start and see every neighborhood one subway ride away, with its cafes, restaurants and sights. Skip the places you always go. Seoul metro area, no login.',
-            ja:'出発地を決めるだけで、地下鉄一本で着く街とカフェ・食堂・名所が地図にまとめて。いつもの街は外せて、ログインなしですぐ使えます。ソウル首都圏。'},
+            ja:'出発地を決めるだけで、地下鉄一本で着く街とカフェ・食堂・名所が地図にまとめて。いつもの街は外せて、ログインなしですぐ使えます。ソウル首都圏。', zh:'選好出發站，搭一班地鐵就能到的街區和咖啡廳、餐廳、景點一次出現在地圖上。常去的地方可以排除，不用登入。首爾都會區。'},
       accent:'#108A72', released:'2026.08', sort:'2026-08-27', platforms:['ios','koOnly'],
       links:[{k:'intro', u:'https://younghwakim.github.io/shared/tobeokmap/', main:true},{t:'App Store', u:'https://apps.apple.com/kr/app/id6794741156'}] },
     { id:'timeteller', status:'live', name:{ko:'타임모의신',en:'Timeteller',ja:'タイムモギシン'}, en:'Timeteller', word:{ko:'모의신',en:'time',ja:'タイム'},
-      pos:{ko:'진짜 시세, 가짜 돈.', en:'Real prices, fake money.', ja:'本物の相場、偽物のお金。'},
+      pos:{ko:'진짜 시세, 가짜 돈.', en:'Real prices, fake money.', ja:'本物の相場、偽物のお金。', zh:'真的行情，假的錢。'},
       desc:{ko:'100년 뒤에서 온 돈으로 오늘의 코인을 굴려 봅니다. 실시간 시세로 하는 모의거래라 실제 돈은 한 푼도 들지 않습니다.',
             en:'Trade today\'s crypto with money from 100 years in the future. Live prices, simulated money — not a single real won at stake. Korean App Store for now.',
-            ja:'100年後から来たお金で今日のコインを運用してみる。リアルタイム相場の模擬取引なので、本物のお金は一切かかりません。今は韓国のApp Storeのみ。'},
+            ja:'100年後から来たお金で今日のコインを運用してみる。リアルタイム相場の模擬取引なので、本物のお金は一切かかりません。今は韓国のApp Storeのみ。', zh:'用來自 100 年後的錢，試著操作今天的加密貨幣。用即時行情做模擬交易，不花一毛真錢。目前只在韓國 App Store。'},
       accent:'#2BB5A0', released:'2026.09', sort:'2026-09-08', platforms:['ios','koOnly'],
       links:[{k:'intro', u:'https://younghwakim.github.io/shared/timeteller/', main:true},{t:'App Store', u:'https://apps.apple.com/kr/app/id6809161436'}] },
 
-    { id:'morado-ildeung', status:'live', shot:{ko:'morado-ildeung-ko',en:'morado-ildeung-en',ja:'morado-ildeung-ja'}, name:{ko:'모라도 일등',en:'1st at Something',ja:'なんかで1位'}, en:'1st at Something', word:{ko:'1등',en:'1st',ja:'1位'},
-      pos:{ko:'뭐라도 하나는 1등이다.', en:'Everyone is first at something.', ja:'何かひとつは1位。'},
+    { id:'morado-ildeung', status:'live', shot:{ko:'morado-ildeung-ko',en:'morado-ildeung-en',ja:'morado-ildeung-ja'}, name:{ko:'모라도 일등',en:'1st at Something',ja:'なんかで1位', zh:'總有一樣第一名'}, en:'1st at Something', word:{ko:'1등',en:'1st',ja:'1位', zh:'第1名'},
+      pos:{ko:'뭐라도 하나는 1등이다.', en:'Everyone is first at something.', ja:'何かひとつは1位。', zh:'每個人總有一樣是第一名。'},
       desc:{ko:'폰으로 잴 수 있는 건 뭐든 종목입니다. 모든 종목은 양쪽 끝에 1등이 있어서, 극단이면 누구나 어딘가 1등. 결과는 기록증 카드로 나옵니다.',
             en:'Anything a phone can measure is an event. Every event has a winner at both ends, so be extreme and you\'re first somewhere. Results come as a record card.',
-            ja:'スマホで測れるものは何でも種目。どの種目にも両端に1位があるので、極端ならどこかで1位。結果は記録証カードになります。'},
+            ja:'スマホで測れるものは何でも種目。どの種目にも両端に1位があるので、極端ならどこかで1位。結果は記録証カードになります。', zh:'手機量得到的都是比賽項目。每個項目的兩端都有第一名，夠極端的話誰都能在某處拿第一。結果會做成一張紀錄證。'},
       accent:'#9CBA12', released:'2026.09', sort:'2026-09-11', platforms:['ios'],
       links:[{k:'intro', u:'https://younghwakim.github.io/shared/morado-ildeung/', main:true},{t:'App Store', u:'https://apps.apple.com/app/id6809404958'}] },
-    { id:'todaycolor', status:'live', shot:{ko:'todaycolor-ko',en:'todaycolor-en',ja:'todaycolor-ja'}, name:{ko:'투데이컬러',en:'Todaycolor',ja:'Todaycolor'}, en:'Todaycolor', word:{ko:'오늘의 색',en:'today',ja:'今日の色'},
-      pos:{ko:'오늘의 색으로 그리는 하루 한 장.', en:"Today's colors. One drawing a day.", ja:'今日の色で描く、一日一枚。'},
+    { id:'todaycolor', status:'live', shot:{ko:'todaycolor-ko',en:'todaycolor-en',ja:'todaycolor-ja'}, name:{ko:'투데이컬러',en:'Todaycolor',ja:'Todaycolor'}, en:'Todaycolor', word:{ko:'오늘의 색',en:'today',ja:'今日の色', zh:'今天的顏色'},
+      pos:{ko:'오늘의 색으로 그리는 하루 한 장.', en:"Today's colors. One drawing a day.", ja:'今日の色で描く、一日一枚。', zh:'用今天的顏色，一天畫一張。'},
       desc:{ko:'매일 전 세계가 같은 네 가지 색을 받습니다. 하나를 종이로 깔고 셋으로 오늘을 그리면, 달력에 한 장씩 쌓입니다.',
             en:'Every day the whole world gets the same four colors. One is your paper, three are your brushes, and each drawing lands on the calendar.',
-            ja:'毎日、世界中が同じ4色を受け取ります。ひとつを紙に、3つで今日を描くと、カレンダーに一枚ずつたまります。'},
+            ja:'毎日、世界中が同じ4色を受け取ります。ひとつを紙に、3つで今日を描くと、カレンダーに一枚ずつたまります。', zh:'每天全世界都拿到同樣的四個顏色。一個當紙，三個當畫筆，畫下今天，月曆上就多一張。'},
       accent:'#B0822A', released:'2026.09', sort:'2026-09-10', platforms:['ios'],
-      links:[{k:'intro', u:'https://younghwakim.github.io/shared/todaycolor/', main:true}, {t:'App Store', u:'https://apps.apple.com/app/id6809541753'}] }
+      links:[{k:'intro', u:'https://younghwakim.github.io/shared/todaycolor/', main:true}, {t:'App Store', u:'https://apps.apple.com/app/id6809541753'}] },
+    { id:'nom', status:'live', shot:{ko:'nom-ko',en:'nom-en',ja:'nom-ja',zh:'nom-zh'}, reel:{ko:'nom-ko',en:'nom-en',ja:'nom-ja',zh:'nom-zh'},
+      name:{ko:'Nom',en:'Nom',ja:'Nom（ノム）',zh:'Nom'}, en:'Screenshot & File Cleaner', word:'nom',
+      pos:{ko:'쌓인 스크린샷, 놈한테 먹이세요.', en:'Feed your screenshots to Nom.', ja:'たまったスクショ、ノムに食べさせよう。', zh:'堆積的截圖，餵給 Nom。'},
+      desc:{ko:'스크린샷과 받은 파일을 사진첩처럼 한눈에 보고 쭉 골라 놈에게 먹입니다. 먹여도 바로 지워지지 않고 배 속에 있다가, 소화할 때만 지워집니다. 구독 없음.',
+            en:'See your screenshots and downloads in a grid like Photos, swipe to pick, and feed them to a yellow blob. Nothing is deleted until Nom digests it. No subscription.',
+            ja:'スクショやダウンロードしたファイルを写真アプリのように一覧で見て、なぞって選んでノムに食べさせます。食べさせてもすぐには消えず、消化したときだけ削除。サブスクなし。',
+            zh:'像相簿一樣一次看完截圖和下載的檔案，滑一下就選好，餵給黃色的 Nom。餵下去不會馬上刪，消化的時候才真正刪除。沒有訂閱。'},
+      accent:'#E3B300', released:'2026.09', sort:'2026-09-29', platforms:['ios'],
+      links:[{t:'App Store', u:'https://apps.apple.com/app/id6815784303', main:true},{k:'intro', u:'https://younghwakim.github.io/shared/nom/'}] }
   ];
 
   var LANG = 'ko';
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
-  function L(v){ return typeof v === 'string' ? v : (v[LANG] || v.ko || v.en); }
+  function L(v){ return typeof v === 'string' ? v : (v[LANG] || (LANG==='zh' ? v.en : null) || v.ko || v.en); }
   var ARROW='<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   function socialRender(){
     var u = UI[LANG];
+    var list = SOCIAL.map(function(s){ var o = s[LANG] || {}; return { id:s.id, label:s.label, svg:s.svg, handle:o.handle||s.handle, url:o.url||s.url }; });
     function lab(s){ return s.id === 'mail' ? u.mail : s.label; }
-    document.getElementById('socialTop').innerHTML = SOCIAL.map(function(s){ var ext = s.id==='mail' ? '' : ' target="_blank" rel="noopener"'; return '<a href="'+esc(s.url)+'"'+ext+'>'+s.svg+'<span class="lab">'+esc(lab(s))+'</span></a>'; }).join('');
-    document.getElementById('socialHero').innerHTML = SOCIAL.map(function(s){ var ext = s.id==='mail' ? '' : ' target="_blank" rel="noopener"'; return '<a href="'+esc(s.url)+'"'+ext+'>'+s.svg+esc(lab(s))+' '+esc(s.handle)+'</a>'; }).join('');
-    document.getElementById('socialFoot').innerHTML = SOCIAL.map(function(s){ var ext = s.id==='mail' ? '' : ' target="_blank" rel="noopener"'; return '<a href="'+esc(s.url)+'"'+ext+'>'+s.svg+esc(lab(s))+' · '+esc(s.handle)+'</a>'; }).join('');
+    function ext(s){ return s.id==='mail' ? '' : ' target="_blank" rel="noopener"'; }
+    document.getElementById('socialTop').innerHTML = list.map(function(s){ return '<a href="'+esc(s.url)+'"'+ext(s)+'>'+s.svg+'<span class="lab">'+esc(lab(s))+'</span></a>'; }).join('');
+    document.getElementById('socialHero').innerHTML = list.map(function(s){ return '<a href="'+esc(s.url)+'"'+ext(s)+'>'+s.svg+esc(lab(s))+' '+esc(s.handle)+'</a>'; }).join('');
+    document.getElementById('socialFoot').innerHTML = list.map(function(s){ return '<a href="'+esc(s.url)+'"'+ext(s)+'>'+s.svg+esc(lab(s))+' · '+esc(s.handle)+'</a>'; }).join('');
   }
 
   function card(a, n){
@@ -335,7 +362,9 @@
     var links=(a.links||[]).map(function(l){ var t = l.k ? (l.k==='intro' ? (koPage ? u.lnkIntroKo : u.lnkIntro) : u.lnkPrivacy) : l.t; return '<a class="lnk'+(l.main?' main':'')+'" href="'+esc(l.u)+'">'+esc(t)+ARROW+'</a>'; }).join('');
     var primary=(a.links&&a.links[0])?a.links[0].u:'#';
     var name = L(a.name);
-    return '<article class="app'+(a.status==='review'?' review':'')+'" style="--accent:'+esc(a.accent)+'">'+
+    var reel = a.reel ? L(a.reel) : '';
+    var reelHtml = reel ? '<div class="reel"><video muted loop playsinline preload="none" poster="assets/video/'+esc(reel)+'.webp" data-src="assets/video/'+esc(reel)+'.mp4" aria-label="'+esc(name+' — '+u.watch)+'"></video></div>' : '';
+    return '<article id="app-'+esc(a.id)+'" class="app'+(a.status==='review'?' review':'')+'" style="--accent:'+esc(a.accent)+'">'+
       '<div class="copy">'+
         '<div class="idx"><i></i>'+(a.status==='live' ? 'No. '+String(n).padStart(2,'0') : esc(u.idxReview))+'</div>'+
         '<div class="head"><div class="icon"><img src="assets/apps/'+esc(a.id)+'.webp" width="56" height="56" alt="" loading="lazy"></div><div><h3><a href="'+esc(primary)+'">'+esc(name)+'</a></h3>'+(a.en && a.en!==name ? '<span class="en">'+esc(a.en)+'</span>' : '')+'</div></div>'+
@@ -344,7 +373,7 @@
         '<div class="meta">'+pills+'</div>'+
         '<div class="links">'+links+'</div>'+
       '</div>'+
-      '<div class="stage" data-word="'+esc(a.word?L(a.word):'')+'"><div class="phone"><img src="assets/shots/'+esc(a.shot?L(a.shot):a.id)+'.webp" width="560" height="1217" alt="'+esc(name)+'" loading="lazy"></div></div>'+
+      '<div class="stage'+(reel?' has-reel':'')+'" data-word="'+esc(a.word?L(a.word):'')+'">'+reelHtml+'<div class="phone"><img src="assets/shots/'+esc(a.shot?L(a.shot):a.id)+'.webp" width="560" height="1217" alt="'+esc(name)+'" loading="lazy"></div></div>'+
     '</article>';
   }
 
@@ -361,20 +390,41 @@
     socialRender();
     document.getElementById('list-live').innerHTML = live.map(function(a){ return card(a, order[a.id]); }).join('');
     document.getElementById('list-review').innerHTML = review.map(function(a){ return card(a); }).join('');
+    cellsRender(); reels();
+  }
+
+  function cellsRender(){
+    var cells=''; for (var i=0;i<100;i++){ cells += '<i class="'+(i<live.length?'on':i<live.length+review.length?'half':'')+'"></i>'; }
+    document.getElementById('cells').innerHTML = cells;
+  }
+
+  // 영상은 화면에 들어왔을 때만 받아서 재생한다(모션 줄이기 설정이면 포스터만)
+  var reelObs = null;
+  function reels(){
+    if (reelObs) reelObs.disconnect();
+    var vids = document.querySelectorAll('.reel video');
+    if (!vids.length || !('IntersectionObserver' in window)) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    reelObs = new IntersectionObserver(function(es){ es.forEach(function(e){ var v = e.target;
+      if (e.isIntersecting){ if (!v.src) v.src = v.getAttribute('data-src'); var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+      else v.pause();
+    }); }, { threshold: 0.35 });
+    vids.forEach(function(v){ reelObs.observe(v); });
   }
   var langButtons = document.querySelectorAll('#langs button');
-  function apply(lang){ LANG = lang; render(); langButtons.forEach(function(b){ b.classList.toggle('on', b.dataset.lang === lang); }); try{ localStorage.setItem('labs-lang', lang); }catch(e){} }
-  langButtons.forEach(function(b){ b.addEventListener('click', function(){ apply(b.dataset.lang); }); });
+  // 저장은 사람이 직접 고른 때만 — 자동으로 고른 언어를 저장하면 기기 언어를 바꿔도 옛 언어에 묶인다
+  function apply(lang, save){ LANG = lang; render(); langButtons.forEach(function(b){ b.classList.toggle('on', b.dataset.lang === lang); }); if (save){ try{ localStorage.setItem('labs-lang', lang); }catch(e){} } }
+  langButtons.forEach(function(b){ b.addEventListener('click', function(){ apply(b.dataset.lang, true); }); });
   var saved=null; try{ saved = localStorage.getItem('labs-lang'); }catch(e){}
   var sys=(navigator.language||'ko').slice(0,2).toLowerCase();
-  apply(saved || (sys==='ko'||sys==='ja' ? sys : 'en')); // 기기 언어: 한국어→ko, 일본어→ja, 그 외 전부 영어
+  var q=null; try{ q = new URLSearchParams(location.search).get('lang'); }catch(e){}
+  // 순서: 주소의 ?lang= (SNS 프로필 링크용) → 직접 고른 언어 → 기기 언어(한국어→ko, 일본어→ja, 중국어→zh 번체, 그 외 전부 영어)
+  apply((q && UI[q]) ? q : (saved && UI[saved]) ? saved : (sys==='ko'||sys==='ja'||sys==='zh' ? sys : 'en'), false);
   if (!review.length) document.getElementById('sec-review').hidden = true;
 
   document.getElementById('nLive').textContent = live.length;
   document.getElementById('nReview').textContent = review.length;
   document.getElementById('nDone').textContent = live.length + review.length;
-  var cells=''; for (var i=0;i<100;i++){ cells += '<i class="'+(i<live.length?'on':i<live.length+review.length?'half':'')+'"></i>'; }
-  document.getElementById('cells').innerHTML = cells;
 
   var header=document.querySelector('header'); function stuck(){ header.classList.toggle('stuck',(window.scrollY||0)>8); } stuck(); window.addEventListener('scroll',stuck,{passive:true});
 })();
