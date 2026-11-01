@@ -344,7 +344,7 @@
             ja:'貯金箱にお金を落として、同じお金どうしを合体。1ウォンから1億の山まで13段階、困ったら戻す・入れ替え・取り出す。アカウント不要、ゲーム内のお金はスコアで現金とは無関係。',
             zh:'把錢丟進存錢筒，讓一樣的錢合在一起。從 1 韓元到 1 億的大山共 13 級，卡住時可以回復、換順序、拿掉一個。不用帳號，遊戲裡的錢只是分數，跟真錢無關。'},
       accent:'#2E7D5B', released:'2026.10', sort:'2026-10-27', platforms:['ios'],
-      links:[{t:'App Store', u:'https://apps.apple.com/app/id6824332308', main:true},{k:'intro', u:'https://younghwakim.github.io/shared/dondon/'}] },
+      links:[{t:'App Store', u:{ko:'https://apps.apple.com/kr/app/id6824332308',en:'https://apps.apple.com/gb/app/id6824332308',ja:'https://apps.apple.com/jp/app/id6824332308',zh:'https://apps.apple.com/tw/app/id6824332308'}, main:true},{k:'intro', u:'https://younghwakim.github.io/shared/dondon/'}] }, // 미국 미출시 — 나라 코드 없는 주소는 미국 스토어로 가서 404
     { id:'nom', status:'live', shot:{ko:'nom-ko',en:'nom-en',ja:'nom-ja',zh:'nom-zh'}, reel:{ko:'nom-ko',en:'nom-en',ja:'nom-ja',zh:'nom-zh'},
       name:{ko:'Nom',en:'Nom',ja:'Nom（ノム）',zh:'Nom'}, en:'Screenshot & File Cleaner', word:'nom',
       pos:{ko:'쌓인 스크린샷, 놈한테 먹이세요.', en:'Feed your screenshots to Nom.', ja:'たまったスクショ、ノムに食べさせよう。', zh:'堆積的截圖，餵給 Nom。'},
@@ -378,7 +378,7 @@
     (a.platforms||[]).forEach(function(p){ var t = (p in u) ? u[p] : p; if (t) pills += '<span class="pill'+(p==='koOnly'?' ko':'')+'">'+esc(t)+'</span>'; });
     var koPage = (a.platforms||[]).indexOf('koOnly')>=0 && LANG!=='ko';
     var links=(a.links||[]).map(function(l){ var t = l.k ? (l.k==='intro' ? (koPage ? u.lnkIntroKo : u.lnkIntro) : u.lnkPrivacy) : l.t; return '<a class="lnk'+(l.main?' main':'')+'" href="'+esc(L(l.u))+'">'+esc(t)+ARROW+'</a>'; }).join('');
-    var primary=(a.links&&a.links[0])?a.links[0].u:'#';
+    var primary=(a.links&&a.links[0])?L(a.links[0].u):'#';
     var name = L(a.name);
     var reel = a.reel ? L(a.reel) : '';
     var reelHtml = reel ? '<div class="reel"><video muted loop playsinline preload="none" poster="assets/video/'+esc(reel)+'.webp" data-src="assets/video/'+esc(reel)+'.mp4" aria-label="'+esc(name+' — '+u.watch)+'"></video></div>' : '';
