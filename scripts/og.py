@@ -8,7 +8,7 @@ import os
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = os.path.join(os.path.dirname(__file__), '..')
-ORDER = ['buruda', 'wemera', 'tobeokmap', 'timeteller', 'morado-ildeung', 'todaycolor', 'nom', 'dondon', 'tuck']
+ORDER = ['buruda', 'wemera', 'tobeokmap', 'timeteller', 'morado-ildeung', 'todaycolor', 'nom', 'petitmap', 'dondon', 'tuck', 'meong']
 TEXT = {
     'ko': ('mubi labs', '나부터 쓰고 싶은 앱을 만들고 있습니다.'),
     'en': ('mubi labs', 'Apps I want to use myself.'),
